@@ -11,6 +11,21 @@ class ImageBlock extends StatelessWidget {
     super.key
   });
 
+  void dialog(BuildContext context, String url) {
+    Navigator.of(context).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: CachedNetworkImage(imageUrl: url),
+          ),
+        );
+      })
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime dt = DateTime.parse(item['created_at']);
@@ -22,10 +37,13 @@ class ImageBlock extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded( 
-            child: CachedNetworkImage(
-              imageUrl: item['urls']['small'],
-              fit: BoxFit.cover,
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+            child: GestureDetector(
+              onTap: () => dialog(context, item['urls']['small']),
+              child: CachedNetworkImage(
+                imageUrl: item['urls']['small'],
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              )
             )
           ),
           Padding(
