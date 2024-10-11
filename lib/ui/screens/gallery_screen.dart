@@ -13,7 +13,7 @@ class GalleryScreen extends StatefulWidget {
 
 class _GalleryScreenState extends State<GalleryScreen> {
   static const _imageCount = 10;
-  final UnsplashService _pixabayService = UnsplashService();
+  final UnsplashService _pixabayService = UnsplashService.instance;
   final PagingController _pagingController = PagingController(firstPageKey: 1);
 
   /// Метод подгрузки пачки картинок постранично по мере скролла

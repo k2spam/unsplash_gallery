@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pixabay_gallery/models/card_model.dart';
 
 /// Виджет отображения карточки с фотографией
 /// количеством лайков и годом на создания фотографии
@@ -18,8 +19,13 @@ class ImageBlock extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: CachedNetworkImage(imageUrl: url),
+            padding: const EdgeInsets.symmetric(horizontal: 20), 
+            child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  progressIndicatorBuilder: (context, url, progress) => const CircularProgressIndicator(),
+                ),
+              )
           ),
         );
       })
@@ -28,8 +34,7 @@ class ImageBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dt = DateTime.parse(item['created_at']);
-    String date = '${dt.year}';
+    CardModel card = CardModel.fromJson(item);
 
     return Card(
       elevation: 3,
@@ -38,16 +43,16 @@ class ImageBlock extends StatelessWidget {
         children: [
           Expanded( 
             child: GestureDetector(
-              onTap: () => dialog(context, item['urls']['small']),
+              onTap: () => dialog(context, card.bigImage),
               child: CachedNetworkImage(
-                imageUrl: item['urls']['small'],
+                imageUrl: card.smallImage,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               )
             )
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 10, right: 5, bottom: 5, left: 5),
+            padding: const EdgeInsets.only(right: 5, bottom: 5, left: 5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,11 +62,11 @@ class ImageBlock extends StatelessWidget {
                     const Icon(Icons.favorite, color: Colors.red),
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text("${item['likes']}"),
+                      child: Text("${card.likes}"),
                     )
                   ],
                 ),
-                Text(date)
+                Text(card.year)
               ],
             ),
           )
